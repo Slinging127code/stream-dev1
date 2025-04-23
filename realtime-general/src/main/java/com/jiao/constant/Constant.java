@@ -28,17 +28,20 @@ public class Constant {
         public static final String TOPIC_DWD_TRAFFIC_DISPLAY = "dwd_xinyi_jiao_display";
 
         public static final String TOPIC_DWD_INTERACTION_COMMENT_INFO = "dwd_interaction_xinyi_jiao_info";
-        public static final String TOPIC_DWD_TRADE_CART_ADD = "dwd_trade_cart_add";
+        public static final String TOPIC_DWD_TRADE_CART_ADD = "dwd_trade_xinyi_jiao_add";
 
-        public static final String TOPIC_DWD_TRADE_ORDER_DETAIL = "dwd_trade_xinyi_jiao_detail";
+        public static final String TOPIC_DWD_TRADE_ORDER_DETAIL = "dwd_trade_order_detail";
 
-        public static final String TOPIC_DWD_TRADE_ORDER_CANCEL = "dwd_trade_order_cancel";
+        public static final String TOPIC_DWD_TRADE_ORDER_CANCEL = "dwd_trade_xinyi_jiao_cancel";
 
-        public static final String TOPIC_DWD_TRADE_ORDER_PAYMENT_SUCCESS = "dwd_trade_order_payment_success";
-        public static final String TOPIC_DWD_TRADE_ORDER_REFUND = "dwd_trade_order_refund";
+        public static final String TOPIC_DWD_TRADE_ORDER_PAYMENT_SUCCESS = "dwd_trade_xinyi_jiao_payment_success";
+        public static final String TOPIC_DWD_TRADE_ORDER_REFUND = "dwd_trade_xinyi_jiao_refund";
 
-        public static final String TOPIC_DWD_TRADE_REFUND_PAYMENT_SUCCESS = "dwd_trade_refund_payment_success";
+        public static final String TOPIC_DWD_TRADE_REFUND_PAYMENT_SUCCESS = "dwd_xinyi_jiao_refund_payment_success";
 
         public static final String TOPIC_DWD_USER_REGISTER = "dwd_user_register";
+
+        public static final String DORIS_FE_NODES="10.39.48.33:8030";
+        public static final String DORIS_DATABASE="dev_xinyi_jiao";
     }
 

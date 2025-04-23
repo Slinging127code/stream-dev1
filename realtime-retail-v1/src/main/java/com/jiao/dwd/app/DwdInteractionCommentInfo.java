@@ -39,7 +39,7 @@ public class DwdInteractionCommentInfo{
                 ")");
 //
 
-        Table table = tenv.sqlQuery("select * from db ");
+//        Table table = tenv.sqlQuery("select * from db ");
 //        tenv.toChangelogStream(table).print();
 // TODO 关联数据 过滤 评论数据
          Table table1 = tenv.sqlQuery("select " +
@@ -65,7 +65,7 @@ public class DwdInteractionCommentInfo{
                 " 'zookeeper.quorum' = 'cdh01,cdh02,cdh03:2181'\n" +
                 ");");
 
-        Table table2 = tenv.sqlQuery("select * from hbase");
+//        Table table2 = tenv.sqlQuery("select * from hbase");
 //        tenv.toChangelogStream(table2).print();
 //
         Table table3 = tenv.sqlQuery("SELECT  " +
@@ -73,7 +73,7 @@ public class DwdInteractionCommentInfo{
                 "FROM comment_info AS c \n" +
                 "  left join hbase as dic \n" +
                 "    ON c.appraise = dic.dic_code;");
-//        table3.execute().print();
+        table3.execute().print();
 //
 //
         tenv.executeSql("CREATE TABLE "+ Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO+" (\n" +
@@ -87,8 +87,9 @@ public class DwdInteractionCommentInfo{
                 "    PRIMARY KEY (id) NOT ENFORCED\n" +
                 ") " + SQLUtil.getUpsertKafkaDDL(Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO));
         // 写入
-        table3.executeInsert(Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO);
-
+//        table3.executeInsert(Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO);
+        Table table4 = tenv.sqlQuery("select * from   dwd_interaction_xinyi_jiao_info ");
+        tenv.toChangelogStream(table4).print();
         env.execute();
     }
 }

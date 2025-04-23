@@ -7,20 +7,12 @@ import com.jiao.base.BaseApp;
 import com.jiao.constant.Constant;
 import com.jiao.util.DateFormatUtil;
 import com.jiao.util.FlinkSinkUtil;
-import javafx.scene.shape.Arc;
 import lombok.SneakyThrows;
-import org.apache.avro.data.Json;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.connector.base.DeliveryGuarantee;
-import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
-import org.apache.flink.connector.kafka.sink.KafkaSink;
-import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SideOutputDataStream;
@@ -28,10 +20,8 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
-import org.apache.flink.util.LambdaUtil;
 import org.apache.flink.util.OutputTag;
 
-import java.awt.*;
 
 /**
  * @Package com.jiao.dwd.log.split.DwdBaseLog
@@ -42,7 +32,7 @@ import java.awt.*;
 public class DwdBaseLog  extends BaseApp {
     @SneakyThrows
     public static void main(String[] args) {
-        new DwdBaseLog().start(10127,4,"dwd_base_log", Constant.TOPIC_LOG);
+        new DwdBaseLog().start(4,"dwd_base_log", Constant.TOPIC_LOG);
     }
     @Override
     public void handle(StreamExecutionEnvironment env, DataStreamSource<String> kafkaStrDS) {

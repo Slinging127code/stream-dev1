@@ -13,28 +13,22 @@ import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
-import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
 import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.kafka.source.KafkaSource;
+import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.BroadcastConnectedStream;
 import org.apache.flink.streaming.api.datastream.BroadcastStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
+import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
-import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.util.Collector;
 import org.apache.hadoop.hbase.client.Connection;
-
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.*;
 
 /**
@@ -55,20 +49,20 @@ public class DimApp {
                 Time.seconds(5) // 重启间隔时间
         ));
         //开启检查点
-//        env.enableCheckpointing(5000L, CheckpointingMode.EXACTLY_ONCE);
-//        //设置检查点超时时间
-//        env.getCheckpointConfig().setCheckpointTimeout(60000L);
-//        //设置job取消后是否保留检查点
-//        env.getCheckpointConfig().setExternalizedCheckpointCleanup(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
-//        //设置两个检查点最小时间间隔
-//        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(2000L);
-//        //设置重启策咯
-//        env.setRestartStrategy(RestartStrategies.failureRateRestart(3, Time.days(30), Time.seconds(3)));
-//        //设置状态后端及其检查点储存路径
-//        env.setStateBackend(new HashMapStateBackend());
-//        env.getCheckpointConfig().setCheckpointStorage("hdfs://cdh01:8020/2207A/xinyi_jiao/flink");
-//        //设置操作hadoop用户
-//        System.setProperty("HADOOP_USER_NAME","root");
+        env.enableCheckpointing(5000L, CheckpointingMode.EXACTLY_ONCE);
+        //设置检查点超时时间
+        env.getCheckpointConfig().setCheckpointTimeout(60000L);
+        //设置job取消后是否保留检查点
+        env.getCheckpointConfig().setExternalizedCheckpointCleanup(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+        //设置两个检查点最小时间间隔
+        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(2000L);
+        //设置重启策咯
+        env.setRestartStrategy(RestartStrategies.failureRateRestart(3, Time.days(30), Time.seconds(3)));
+        //设置状态后端及其检查点储存路径
+        env.setStateBackend(new HashMapStateBackend());
+        env.getCheckpointConfig().setCheckpointStorage("hdfs://cdh01:8020/2207A/xinyi_jiao/flink");
+        //设置操作hadoop用户
+        System.setProperty("HADOOP_USER_NAME","root");
         //TODO 3.从Kafka的topic_db主题中读取业务数据
         //3.1 声明消费的主题以及消费者组
         String groupId = "dim_app_group";

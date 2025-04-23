@@ -1,6 +1,7 @@
     package com.jiao.dim.app;
 
-    import com.ververica.cdc.connectors.mysql.source.MySqlSource;
+    import
+            com.ververica.cdc.connectors.mysql.source.MySqlSource;
     import com.ververica.cdc.connectors.mysql.table.StartupOptions;
     import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
     import lombok.SneakyThrows;
@@ -15,6 +16,7 @@
     import java.util.Properties;
 
     /**
+     *
      * @Package com.jiao.dim.Test01_FlinkCDC
      * @Author xinyi.jiao
      * @Date 2025/4/7 20:51

@@ -2,6 +2,7 @@ package com.jiao.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.CaseFormat;
+import com.jiao.constant.Constant;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -138,4 +139,65 @@ public class HBaseUtil {
         }
     }
 // TODO 李珂琰到此一游  啦啦啦 写这么多你不要命了
+public static <T>T getRow(Connection hbaseConn, String namespace, String tableName, String rowKey,Class<T> clz,boolean... isUnderlineToCamel){
+    boolean defaultIsUToC = false;  // 默认不执行下划线转驼峰
+
+    if (isUnderlineToCamel.length > 0) {
+        defaultIsUToC = isUnderlineToCamel[0];
+    }
+
+    TableName tableNameObj = TableName.valueOf(namespace, tableName);
+    try (Table table = hbaseConn.getTable(tableNameObj)){
+        Get get = new Get(Bytes.toBytes(rowKey));
+        Result result = table.get(get);
+        List<Cell> cells = result.listCells();
+        if(cells != null && cells.size() > 0){
+            //定义一个对象，用于封装查询出来的一行数据
+            T obj = clz.newInstance();
+            for (Cell cell : cells) {
+                String columnName = Bytes.toString(CellUtil.cloneQualifier(cell));
+                String columnValue = Bytes.toString(CellUtil.cloneValue(cell));
+                if(defaultIsUToC){
+                    columnName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL,columnName);
+                }
+                BeanUtils.setProperty(obj,columnName,columnValue);
+            }
+            return obj;
+        }
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+    return null;
+}
+
+
+    public static JSONObject readDimAsync(AsyncConnection asyncConn,String namespace, String tableName, String rowKey){
+    try {
+        TableName tableNameObj = TableName.valueOf(namespace, tableName);
+        AsyncTable<AdvancedScanResultConsumer> asyncTable = asyncConn.getTable(tableNameObj);
+        Get get = new Get(Bytes.toBytes(rowKey));
+        Result result = asyncTable.get(get).get();
+        List<Cell> cells = result.listCells();
+        if(cells != null && cells.size() > 0){
+            JSONObject jsonObj = new JSONObject();
+            for (Cell cell : cells) {
+                String columnName = Bytes.toString(CellUtil.cloneQualifier(cell));
+                String columnValue = Bytes.toString(CellUtil.cloneValue(cell));
+                jsonObj.put(columnName,columnValue);
+            }
+            return jsonObj;
+        }
+    } catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+    return null;
+}
+
+    public static void main(String[] args) throws Exception {
+        Connection hBaseConnection = getHBaseConnection();
+        JSONObject jsonObj = getRow(hBaseConnection, Constant.HBASE_NAMESPACE, "dim_base_trademark", "1", JSONObject.class);
+        System.out.println(jsonObj);
+        closeHBaseConnection(hBaseConnection);
+    }
+
 }
